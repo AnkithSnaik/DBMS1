@@ -1,0 +1,101 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+#define MAX_MOVIES 100
+#define MAX_TITLE_LENGTH 100
+
+typedef struct
+{
+    int id;
+    char title[MAX_TITLE_LENGTH];
+}MOVIE;
+
+MOVIE movie[MAX_MOVIES];
+int movie_count = 0;
+
+void addmovie(int id,char title[])
+{
+    if(movie_count<MAX_MOVIES)
+    {
+        movie[movie_count].id = id;
+        strncpy(movie[movie_count].title,title,MAX_TITLE_LENGTH-1);
+        movie[movie_count].title[MAX_TITLE_LENGTH-1] = '\0';
+        movie_count++;
+        printf("MOVIE ADDED :[%d] %s\n",id,title);
+    }
+    else
+    {
+        printf("INDEX IS FULL MOVIE CANT BE ADDED!!");
+    }
+}
+
+void searchbook(char title[])
+{
+    for(int i=0;i<movie_count;i++)
+    {
+        if(strcasecmp(movie[i].title,title) == 0)
+        {
+            printf("MOVIE FOUND : [%d] %s\n",movie[i].id,movie[i].title);
+            return;
+        }
+    }
+    printf("MOVIE NOT FOUND : %s\n",title);
+}
+
+void displaymovies()
+{
+    if(movie_count==0)
+    {
+        printf("NO MOVIES IN THE INDEX \n");
+        return;
+    }
+    printf("MOVIES IN THE INDEX ARE : \n");
+    for(int i=0;i<movie_count;i++)
+    {
+        printf("[%d] %s\n",movie[i].id,movie[i].title);
+    }
+}
+
+int main() {
+    int choice, id;
+    char title[MAX_TITLE_LENGTH];
+
+    while (1) {
+        printf("\nIndex Menu:\n");
+        printf("1. Add Movie\n");
+        printf("2. Search Movie\n");
+        printf("3. Display All Movie\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        getchar(); // Consume newline character left by scanf
+
+        switch (choice) {
+            case 1:
+                printf("Enter book ID: ");
+                scanf("%d", &id);
+                getchar(); // Consume newline character
+                printf("Enter Movie Name: ");
+                fgets(title, sizeof(title), stdin);
+                title[strcspn(title, "\n")] = '\0'; // Remove trailing newline
+                addmovie(id, title);
+                break;
+            case 2:
+                printf("Enter Movie title to search: ");
+                fgets(title, sizeof(title), stdin);
+                title[strcspn(title, "\n")] = '\0'; // Remove trailing newline
+                searchbook(title);
+                break;
+            case 3:
+                displaymovies();
+                break;
+            case 4:
+                exit(0);
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    }
+
+    return 0;
+}
