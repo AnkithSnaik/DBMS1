@@ -1,46 +1,49 @@
-package dbms123;
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.Iterator;
+package utils;
+
+import java.io.IOException;
+
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell; 
-import org.apache.poi.ss.usermodel.Row;  
 
-public class ReadExcel {
-
-    public static void main(String[] args) {
-        try {
-            FileInputStream file = new FileInputStream(new File("input.xlsx"));
-            XSSFWorkbook workbook = new XSSFWorkbook(file);
-            XSSFSheet sheet = workbook.getSheetAt(0);
-            Iterator<Row> rowIterator = sheet.iterator();
-            
-            while (rowIterator.hasNext()) {
-                Row row = rowIterator.next();
-                Iterator<Cell> cellIterator = row.cellIterator();
-                
-                while (cellIterator.hasNext()) {
-                    Cell cell = cellIterator.next();
-                    
-                    switch (cell.getCellType()) {
-                        case NUMERIC:
-                            System.out.print(cell.getNumericCellValue() + "\t");
-                            break;
-                        case STRING:
-                            System.out.print(cell.getStringCellValue() + "\t");
-                            break;
-                        default:
-                            System.out.print("Unknown type\t");
-                            break;
-                    }
-                }
-                System.out.println("");
-            }
-            file.close();
-            workbook.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+public class ExelAccess {
+   public static void main(String[] args)
+   {
+	   getRowCount();
+	   getData();
+   }
+   public static void getData()
+   {
+	   
+		try {
+			String Excelpath = "./data/Testdata.xlsl.xlsx";  
+			XSSFWorkbook workbook;
+			workbook = new XSSFWorkbook(Excelpath);
+			XSSFSheet sheet = workbook.getSheet("sheet1");
+			//String value = sheet.getRow(0).getCell(1).getStringCellValue();
+			//System.out.println(value);
+			DataFormatter formatter = new DataFormatter();
+			Object value = formatter.formatCellValue(sheet.getRow(0).getCell(1));
+			//object because it stores any kind of data
+			System.out.println(value);
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+		}
+		
+   }
+   public static void getRowCount()
+   {
+	   try {
+		String Excelpath = "./data/Testdata.xlsl.xlsx";  
+		XSSFWorkbook workbook = new XSSFWorkbook(Excelpath);
+		XSSFSheet sheet = workbook.getSheet("sheet1");
+		int rowCount = sheet.getPhysicalNumberOfRows();
+		System.out.println("No of rows are :"+rowCount);
+	} catch (IOException e) {
+		
+		e.printStackTrace();
+	}
+   }
 }
+
